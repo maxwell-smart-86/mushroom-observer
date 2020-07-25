@@ -1054,7 +1054,9 @@ class ApplicationController < ActionController::Base
       :show_objects.t(type: model.type_tag),
       # add_query_param({ controller: "/#{model.show_controller}",
       #                   action: :index }, query)
-      model_index_path(model, q: query)
+      "/#{model.show_controller}/#{model.index_action}/" \
+      "#{params[:id]}?q=#{get_query_param}"
+      # model_index_path(model, q: query)
     ]
   end
   helper_method :coerced_query_link
