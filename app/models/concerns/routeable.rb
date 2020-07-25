@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # https://www.dwightwatson.com/posts/accessing-rails-routes-helpers-from-anywhere-in-your-app
+# https://stackoverflow.com/questions/43355582/rails-make-route-helper-methods-available-to-poro
 
 module Routeable
   extend ActiveSupport::Concern

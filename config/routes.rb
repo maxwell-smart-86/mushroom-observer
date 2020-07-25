@@ -174,7 +174,21 @@ ACTIONS = {
     commercial_inquiry: {},
     email_question: {}
   },
-  glossary: {
+  # glossary: { # now handled by glossary_terms
+    # create_glossary_term: {}, # aliased only (create)
+    # edit_glossary_term: {}, # aliased only (edit)
+    # show_glossary_term: {}, # aliased only (show)
+    # show_past_glossary_term: {}
+    # resources
+    # create: {},
+    # destroy: {},
+    # edit: {},
+    # index: {},
+    # new: {},
+    # show: {},
+    # update: {}
+  # },
+  glossary_terms: {
     # create_glossary_term: {}, # aliased only
     # edit_glossary_term: {}, # aliased only
     # show_glossary_term: {}, # aliased only
@@ -275,6 +289,7 @@ ACTIONS = {
     how_to_help: {},
     how_to_use: {},
     intro: {},
+    interview: {},
     show_site_stats: {},
     search_bar_help: {},
     textile: {}, # aliased only
@@ -393,6 +408,7 @@ ACTIONS = {
   #   show: {}
   # },
   observations: {
+    advanced_search: {},
     # create_observation: {}, # aliased only
     # destroy_observation: {}, # aliased only
     download_observations: {},
@@ -576,7 +592,6 @@ ACTIONS = {
     change_user_bonuses: {},
     checklist: {},
     index_user: {},
-    ilist_users: {},
     # list_users: {}, # aliased only
     # next_user: {}, # aliased only
     # prev_user: {}, # aliased only
@@ -626,7 +641,6 @@ LOOKUP_XXX_ID_ACTIONS = %w[
 ].freeze
 
 MushroomObserver::Application.routes.draw do
-
   # Priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -691,11 +705,9 @@ MushroomObserver::Application.routes.draw do
   # Not logged in - Default page is /observations#index.
   root :to => "observations#index"
 
-  resources :articles, :collection_numbers, :comments, :herbaria,
-    :herbarium_records, :images, :names, :namings, :observations,
+  resources :articles, :collection_numbers, :comments, :glossary_terms,
+    :herbaria, :herbarium_records, :images, :names, :namings, :observations,
     :projects, :publications, :sequences, :species_lists
-
-  resources :glossary, as: "glossary_terms"
 
   # http://jeromedalbert.com/how-dhh-organizes-his-rails-controllers/
   resources :locations do
@@ -740,8 +752,12 @@ MushroomObserver::Application.routes.draw do
         id: /\d+/
   end
 
-  namespace :names do
-    resources :descriptions
+  # namespace :names do
+  #   resources :descriptions
+  # end
+
+  resources :names do
+    resources :descriptions, module: :names
   end
 
   ND_GET_ACTIONS = {
@@ -767,7 +783,7 @@ MushroomObserver::Application.routes.draw do
 
   resources :rss_logs, only: [:index, :show]
 
-  resources :account, only: [:new, :create, :edit, :update, :destroy]
+  resources :account, only: [:index, :new, :create, :edit, :update, :destroy]
 
   resources :users, only: [:index, :show]
 

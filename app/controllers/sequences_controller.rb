@@ -94,7 +94,7 @@ class SequencesController < ApplicationController
     end
   end
 
-  alias_method :edit_sequence, :edit
+  alias edit_sequence edit
 
   def update
     store_location

@@ -5,6 +5,7 @@
 # HTML markup should be in the views or partials
 class LogItemPresenter
   include Routeable # url_helpers not otherwise available in presenter
+  include ObjectLinkHelper
 
   attr_accessor \
     :thumbnail, # thumbnail image tag
