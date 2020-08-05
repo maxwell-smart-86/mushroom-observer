@@ -54,6 +54,45 @@ module IntegrationControllerExtensions
   #
   ##############################################################################
 
+  # these 6 are from FunctionalTestCase, should probably be moved.
+  def get(*args, &block)
+    args = check_for_params(args)
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def post(*args, &block)
+    args = extract_body(check_for_params(args))
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def put(*args, &block)
+    args = check_for_params(args)
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def delete(*args, &block)
+    args = check_for_params(args)
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def check_for_params(args)
+    return args if (args.length < 2) || args[1][:params]
+
+    [args[0], { params: args[1] }] + args[2..]
+  end
+
+  def extract_body(args)
+    if args.length >= 2
+      params = args[1][:params]
+      args[1][:body] = params.delete(:body).read if params.member?(:body)
+    end
+    args
+  end
+
   # Second "get" won't update fullpath, so we must reset the request.
   def reget(*args)
     @request = @request.class.new

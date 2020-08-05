@@ -77,6 +77,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     q = query.id.alphabetize
 
     get sequence_path(q: q, id: results[1].id, next: 1)
+    byebug
     # assert_redirected_to sequence_path(results[2], q: q)
     # puts response.body
     assert_template "sequences/show"
@@ -112,7 +113,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     # puts response.body
 
     login("zero")
-    byebug
+    # byebug
     get new_sequence_path(obs: obs.id)
     assert_response :success
 
@@ -126,6 +127,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     get new_sequence_path(obs: obs.id)
     assert_response :success
   end
+  # test_new green - AN 08/20
 
   def test_create
     old_count = Sequence.count
@@ -149,15 +151,23 @@ class SequencesControllerTest < IntegrationControllerTestCase
                   bases: bases }
     }
 
+    # NOTE: the correct path is to POST to sequences_path.
+    # with REST routing, new_*_path accepts only GET requests.
+
+    # The problem here is that the "post" method does not produce a
+    # request where request.method == "POST". It's "GET"... to "account/login"
+
     # Prove user must be logged in to create Sequence
-    # NOTE: new_*_path takes only GET with REST routing - NIMMO 07/20
     post sequences_path, params: params
+    # assert_flash_error
+    byebug
     assert_equal(old_count, Sequence.count)
 
     # Prove logged-in user can add sequence to someone else's Observation
     user = users(:zero_user)
     login(user.login)
     # Check if this login even worked - AN
+    # byebug
     post sequences_path, params: params
     byebug
     assert_equal(old_count + 1, Sequence.count)
