@@ -1,4 +1,4 @@
-<%
+<% # FIXME: Rewrite @sorts everywhere to pass a sort_by param, not action!
 sortby = ""
 @sorts.each do |title, action|
   if action.nil?
@@ -22,13 +22,24 @@ end
         } %>
   <%= tag.div class: "dropdown-menu", id: "sorts",
               aria: { labelledby: "sort_menu_button" } do -%>
-      <% @sorts.each do |title, action| %>
-        <%= if action.nil?
+      <% # No. Sorts cannot be done this way in bootstrap-4 branch.
+         # Need to use :index path and by: param.
+         # New in object_link_helper: controller_index_path
+         # Build sorts with the param, not the action.
+         # @sorts.each do |title, action| # |title, sort_by| %>
+        <%# if action.nil? # sort_by.nil?
               link_with_query(title, {}, class: "dropdown-item active",
                                          disabled: true)
+              link_to(title,
+                      controller_index_path(by: sort_by, q: get_query_param),
+                      class: "dropdown-item active", disabled: true)
+              or rather no link, would be better. 
             else
               link_with_query(title, action, class: "dropdown-item")
+              link_to(title,
+                      controller_index_path(by: sort_by, q: get_query_param),
+                      class: "dropdown-item")
             end %>
-      <% end %>
+      <%# end %>
   <% end %>
 <% end %>

@@ -138,11 +138,11 @@ module ObjectLinkHelper
   # Wrap object's name in link to the object, return nil if no object
   #   Project: <%= project_link(draft_name.project) %>
   #   Species List: <%= species_list_link(observation.species_lists.first) %>
-  def link_to_object(object, name = nil)
-    return nil unless object
-
-    link_to(name || object.title.t, helpers.object_path(object))
-  end
+  # def link_to_object(object, name = nil)
+  #   return nil unless object
+  #
+  #   link_to(name || object.title.t, helpers.object_path(object))
+  # end
 
   # Wrap description title in link to show_description.
   #
@@ -290,7 +290,12 @@ module ObjectLinkHelper
   #   objroute = object_route_s(model)
   #   send("#{objroute}_path", params)
   # end
-  #
+
+  # Note: could be dicey! Assumes plural controller name and default resources
+  def controller_index_path(controller, params)
+    send("#{controller.controller_name}_path", params)
+  end
+
   def object_route_s(obj)
     obj.model_name.singular_route_key
   end
