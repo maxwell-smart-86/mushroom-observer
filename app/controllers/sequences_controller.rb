@@ -10,6 +10,9 @@
 #    destroy_sequence::  Destroy sequence.
 #    edit_sequence::     Update sequence.
 #
+# NIMMO NOTE!!!! PARAM FOR SEQUENCE OBSERVATION HAS CHANGED FROM :id TO :obs !!!
+# MUST CHANGE ALSO IN TESTS!!! - 08/20
+
 class SequencesController < ApplicationController
   before_action :login_required, except: [
     :index,
@@ -181,6 +184,10 @@ class SequencesController < ApplicationController
   end
 
   def build_sequence
+    puts "-" * 80
+    puts "We are in build_sequence"
+    puts "-" * 80
+
     @sequence = @observation.sequences.new
     @sequence.attributes = whitelisted_sequence_params
     @sequence.user = @user
@@ -193,6 +200,10 @@ class SequencesController < ApplicationController
   end
 
   def save_updates
+    puts "-" * 80
+    puts "We are in save_updates"
+    puts "-" * 80
+
     @sequence.attributes = whitelisted_sequence_params
     if @sequence.save
       flash_notice(:runtime_sequence_success.t(id: @sequence.id))
@@ -211,6 +222,7 @@ class SequencesController < ApplicationController
     puts "-" * 80
     puts "We are in show_selected_sequences"
     puts "-" * 80
+    
     args = {
       action: :index,
       letters: "sequences.locus",
@@ -231,8 +243,6 @@ class SequencesController < ApplicationController
   end
 
   def whitelisted_sequence_params
-    params[:sequence].permit(
-      :archive, :accession, :bases, :locus, :notes, :back, :obs, :next, :prev
-    )
+    params[:sequence].permit(:archive, :accession, :bases, :locus, :notes)
   end
 end

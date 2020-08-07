@@ -2,6 +2,9 @@
 
 require "test_helper"
 
+# NIMMO NOTE!!!! PARAM FOR SEQUENCE OBSERVATION HAS CHANGED FROM :id TO :obs !!!
+# MUST CHANGE ALSO IN TESTS!!! - 08/20
+
 # Controller tests for nucleotide sequences
 class SequencesControllerTest < IntegrationControllerTestCase
   def test_index
@@ -49,7 +52,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     assert_operator(results.count, :>, 3)
     q = query.id.alphabetize
 
-    get sequences_path(q: q, id: results[2].id)
+    get sequences_path(q: q, obs: results[2].id) # obs: was id:
     # puts response.body
     assert_response :success
   end
@@ -102,7 +105,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     owner = obs.user
 
     # Prove method requires login
-    get new_sequence_path(id: obs.id)
+    get new_sequence_path(obs: obs.id)
     # assert_redirected_to account_login_path
     assert_template("account/login")
     assert_equal "/account/login", path
@@ -146,7 +149,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
             "ctgtgaacgc tctctgtatt gttctgcttc taactgtctt attaaaggac aacaatattg"\
             "aacttttgac ctcaaatcag gtaggactac ccgctgaact taagcatatc aataa"
     params = {
-      id: obs.id,
+      obs: obs.id,
       sequence: { locus: locus,
                   bases: bases }
     }
@@ -160,7 +163,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     # Prove user must be logged in to create Sequence
     post sequences_path, params: params
     # assert_flash_error
-    byebug
+    # byebug
     assert_equal(old_count, Sequence.count)
 
     # Prove logged-in user can add sequence to someone else's Observation
@@ -188,7 +191,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     # locus = "ITS"
     # bases = "gagtatgtgc acacctgccg tctttatcta tccacctgtg cacacattgt agtcttgggg"
     # params = {
-    #   id: obs.id,
+    #   obs: obs.id, # obs: was id:
     #   sequence: { locus: locus,
     #               bases: bases }
     # }
@@ -213,7 +216,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     # archive =   "GenBank"
     # accession = "KY366491.1"
     # params = {
-    #   id: obs.id,
+    #   obs: obs.id, # obs: was id:
     #   sequence: { locus: locus,
     #               archive: archive,
     #               accession: accession }
@@ -237,7 +240,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
 
     # Prove that locus is required.
     params = {
-      id: obs.id,
+      obs: obs.id, # obs: was id:
       sequence: { locus: "",
                   bases: "actgct" }
     }
@@ -249,7 +252,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
 
     # Prove that bases or archive+accession required.
     params = {
-      id: obs.id,
+      obs: obs.id, # obs: was id:
       sequence: { locus: "ITS" }
     }
     post sequences_path(params)
@@ -259,7 +262,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
 
     # Prove that accession required if archive present.
     params = {
-      id: obs.id,
+      obs: obs.id, # obs: was id:
       sequence: { locus: "ITS", archive: "GenBank" }
     }
     post sequences_path(params)
@@ -269,7 +272,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
 
     # Prove that archive required if accession present.
     params = {
-      id: obs.id,
+      obs: obs.id, # obs: was id:
       sequence: { locus: "ITS", accession: "KY133294.1" }
     }
     post sequences_path(params)
@@ -283,7 +286,7 @@ class SequencesControllerTest < IntegrationControllerTestCase
     query = Query.lookup_and_save(:Sequence, :all)
     q = query.id.alphabetize
     params = {
-      id: obs.id,
+      obs: obs.id, # obs: was id:
       sequence: { locus: "ITS", bases: "atgc" },
       q: q
     }

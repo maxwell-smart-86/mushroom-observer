@@ -48,11 +48,12 @@
 ################################################################################
 
 class IntegrationControllerTestCase < ActionDispatch::IntegrationTest
-  include GeneralExtensions
-  include SessionExtensions
-  include FlashExtensions
-  include IntegrationControllerExtensions
-  include CheckForUnsafeHtml
+  # include GeneralExtensions
+  # include SessionExtensions
+  # include FlashExtensions
+  # include IntegrationExtensions # logins, needs session extensions
+  include ControllerExtensions
+  # include CheckForUnsafeHtml
 
   # Important to allow integration tests test the CSRF stuff to avoid unpleasant
   # surprises in production mode.
