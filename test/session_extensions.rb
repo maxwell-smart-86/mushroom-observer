@@ -67,10 +67,38 @@ module SessionExtensions
   # Call follow_redirect!, checking for 500 errors and missing language
   # tags.  Saves body of all successful responses for debugging, too.
   def process_with_error_checking(method, url, *args)
+    puts "-" * 80
+    puts "We are in process_with_error_checking"
+    puts "-" * 80
+    puts "method:"
+    pp method
+    puts "url:"
+    pp url
+    puts "args:"
+    pp args
+    # byebug
+
     @doing_with_error_checking = true
     Symbol.missing_tags = []
     send(method.downcase.to_s, url, *args)
-    follow_redirect! while response.redirect?
+
+    puts "Sending request:"
+    puts request.fullpath
+    puts request.method
+    puts "response:"
+    puts response.code
+    puts response.message
+    # puts "Symbol.missing_tags"
+    # pp Symbol.missing_tags
+    # puts response.body
+
+    while response.redirect?
+      follow_redirect!
+      puts "Redirected to:"
+      puts request.fullpath
+      puts request.method
+    end
+
     if status == 500
       msg = if error = controller.instance_variable_get("@error")
               "#{error}\n#{error.backtrace.join("\n")}"
@@ -92,6 +120,7 @@ module SessionExtensions
     puts "-" * 80
     puts "We are in session_extensions get"
     puts "-" * 80
+
     if !@doing_with_error_checking
       process_with_error_checking("get", *args)
     else
@@ -101,6 +130,10 @@ module SessionExtensions
 
   # Override all 'post' calls and do a bunch of extra error checking.
   def post(*args)
+    puts "-" * 80
+    puts "We are in session_extensions post"
+    puts "-" * 80
+
     if !@doing_with_error_checking
       process_with_error_checking("POST", *args)
     else

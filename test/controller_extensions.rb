@@ -54,6 +54,44 @@ module ControllerExtensions
   #
   ##############################################################################
 
+  def get(*args, &block)
+    args = check_for_params(args)
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def post(*args, &block)
+    args = extract_body(check_for_params(args))
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def put(*args, &block)
+    args = check_for_params(args)
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def delete(*args, &block)
+    args = check_for_params(args)
+    super(*args, &block)
+    check_for_unsafe_html!
+  end
+
+  def check_for_params(args)
+    return args if (args.length < 2) || args[1][:params]
+
+    [args[0], { params: args[1] }] + args[2..]
+  end
+
+  def extract_body(args)
+    if args.length >= 2
+      params = args[1][:params]
+      args[1][:body] = params.delete(:body).read if params.member?(:body)
+    end
+    args
+  end
+
   # Second "get" won't update fullpath, so we must reset the request.
   def reget(*args)
     @request = @request.class.new
@@ -74,11 +112,16 @@ module ControllerExtensions
 
   # Log a user in (affects session only).
   def login(user = "rolf", password = "testpassword")
-    user = User.authenticate(user, password)
-    assert(user, "Failed to authenticate user <#{user}> " \
-                 "with password <#{password}>.")
-    @request.session[:user_id] = user.id
+    # user = User.authenticate(user, password)
+    # assert(user, "Failed to authenticate user <#{user}> " \
+    #              "with password <#{password}>.")
+    # @request.session[:user_id] = user.id
+    # User.current = user
+
+    post account_login_path(login: user, password: password, remember_me: 1)
     User.current = user
+
+    # check welcome page! - AN 08/20
   end
 
   # Log a user out (affects session only).
@@ -91,11 +134,12 @@ module ControllerExtensions
   # Make the logged-in user admin and turn on admin mode.
   def make_admin(user = "rolf", password = "testpassword")
     user = login(user, password)
-    @request.session[:admin] = true
-    unless user.admin
-      user.admin = 1
-      user.save
-    end
+    # @request.session[:admin] = true
+    post account_turn_admin_on_path
+    # unless user.admin
+    #   user.admin = 1
+    #   user.save
+    # end
     user
   end
 

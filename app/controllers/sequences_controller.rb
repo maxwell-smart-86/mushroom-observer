@@ -29,6 +29,9 @@ class SequencesController < ApplicationController
   ]
 
   def index
+    puts "-" * 80
+    puts "We are in :index"
+    puts "-" * 80
     store_location
     if params[:obs]
       observation_index
@@ -64,6 +67,10 @@ class SequencesController < ApplicationController
   alias :show_sequence :show
 
   def new
+    puts "-" * 80
+    puts "We are in new"
+    puts "-" * 80
+
     store_location
     pass_query_params
     @observation = find_or_goto_index(Observation, params[:obs].to_s)
@@ -76,15 +83,24 @@ class SequencesController < ApplicationController
   alias :create_sequence :new
 
   def create
+    puts "-" * 80
+    puts "We are in create"
+    puts "-" * 80
+
     store_location
     pass_query_params
     @observation = find_or_goto_index(Observation, params[:obs].to_s)
+    byebug
     return unless @observation
 
     build_sequence
   end
 
   def edit
+    puts "-" * 80
+    puts "We are in edit"
+    puts "-" * 80
+
     store_location
     pass_query_params
     @sequence = find_or_goto_index(Sequence, params[:id].to_s)
@@ -100,6 +116,10 @@ class SequencesController < ApplicationController
   alias edit_sequence edit
 
   def update
+    puts "-" * 80
+    puts "We are in update"
+    puts "-" * 80
+
     store_location
     pass_query_params
     @sequence = find_or_goto_index(Sequence, params[:id].to_s)
@@ -115,6 +135,10 @@ class SequencesController < ApplicationController
   end
 
   def destroy
+    puts "-" * 80
+    puts "We are in destroy"
+    puts "-" * 80
+
     pass_query_params
     @sequence = find_or_goto_index(Sequence, params[:id].to_s)
     return unless @sequence
@@ -222,7 +246,7 @@ class SequencesController < ApplicationController
     puts "-" * 80
     puts "We are in show_selected_sequences"
     puts "-" * 80
-    
+
     args = {
       action: :index,
       letters: "sequences.locus",

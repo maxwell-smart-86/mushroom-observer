@@ -107,7 +107,8 @@ class SequencesControllerTest < IntegrationControllerTestCase
     # Prove method requires login
     get new_sequence_path(obs: obs.id)
     # assert_redirected_to account_login_path
-    assert_template("account/login")
+    # assert_template("account/login")
+    # byebug
     assert_equal "/account/login", path
 
     # Prove logged-in user can add Sequence to someone else's Observation
@@ -161,17 +162,19 @@ class SequencesControllerTest < IntegrationControllerTestCase
     # request where request.method == "POST". It's "GET"... to "account/login"
 
     # Prove user must be logged in to create Sequence
+    puts "Prove user must be logged in to create Sequence"
     post sequences_path, params: params
     # assert_flash_error
     # byebug
     assert_equal(old_count, Sequence.count)
 
     # Prove logged-in user can add sequence to someone else's Observation
+    puts "Prove logged-in user can add sequence to someone else's Observation"
     user = users(:zero_user)
     login(user.login)
-    # Check if this login even worked - AN
-    # byebug
+    byebug
     post sequences_path, params: params
+    # OK this is not even hitting the :create action. Huh? - AN
     byebug
     assert_equal(old_count + 1, Sequence.count)
     sequence = Sequence.last
@@ -186,31 +189,31 @@ class SequencesControllerTest < IntegrationControllerTestCase
     assert(obs.rss_log.notes.include?("log_sequence_added"),
            "Failed to include Sequence added in RssLog for Observation")
 
-    # # Prove user can create non-repository Sequence
-    # old_count = Sequence.count
-    # locus = "ITS"
-    # bases = "gagtatgtgc acacctgccg tctttatcta tccacctgtg cacacattgt agtcttgggg"
-    # params = {
-    #   obs: obs.id, # obs: was id:
-    #   sequence: { locus: locus,
-    #               bases: bases }
-    # }
-    #
-    # login(owner.login)
-    # post sequences_path(params)
-    # assert_equal(old_count + 1, Sequence.count)
-    # sequence = Sequence.last
-    # assert_objs_equal(obs, sequence.observation)
-    # assert_users_equal(owner, sequence.user)
-    # assert_equal(locus, sequence.locus)
-    # assert_equal(bases, sequence.bases)
-    # assert_empty(sequence.archive)
-    # assert_empty(sequence.accession)
-    # assert_redirected_to(observation_path(obs))
-    # assert_flash_success
-    # assert(obs.rss_log.notes.include?("log_sequence_added"),
-    #        "Failed to include Sequence added in RssLog for Observation")
-    #
+    # Prove user can create non-repository Sequence
+    old_count = Sequence.count
+    locus = "ITS"
+    bases = "gagtatgtgc acacctgccg tctttatcta tccacctgtg cacacattgt agtcttgggg"
+    params = {
+      obs: obs.id, # obs: was id:
+      sequence: { locus: locus,
+                  bases: bases }
+    }
+
+    login(owner.login)
+    post sequences_path(params)
+    assert_equal(old_count + 1, Sequence.count)
+    sequence = Sequence.last
+    assert_objs_equal(obs, sequence.observation)
+    assert_users_equal(owner, sequence.user)
+    assert_equal(locus, sequence.locus)
+    assert_equal(bases, sequence.bases)
+    assert_empty(sequence.archive)
+    assert_empty(sequence.accession)
+    assert_redirected_to(observation_path(obs))
+    assert_flash_success
+    assert(obs.rss_log.notes.include?("log_sequence_added"),
+           "Failed to include Sequence added in RssLog for Observation")
+
     # # Prove admin can create repository Sequence
     # locus =     "ITS"
     # archive =   "GenBank"

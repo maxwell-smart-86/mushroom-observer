@@ -1,6 +1,7 @@
 <%
-  @navbar[:title] = { title: :ACCOUNT.t, url: account_login_path }
-  @title = :signup_title.t
+@navbar = {} # reset
+@navbar[:title] = { title: :ACCOUNT.t, url: account_login_path }
+@title = :signup_title.t
 %>
 
 <div class="form-max-width">
