@@ -214,11 +214,11 @@ class AccountController < ApplicationController
   end
 
   def login_post
-    # New login form params are not nested under user - AN 07/20
-    # user_params = params[:user] || {}
-    @login    = params[:login].to_s # was user_params
-    @password = params[:password].to_s # was user_params
-    @remember = params[:remember_me] == "1" # was user_params
+    # New login form params are not nested under user - AN 07/20 ??? Hartl ???
+    user_params = params[:user] || {}
+    @login    = user_params[:login].to_s # was user_params
+    @password = user_params[:password].to_s # was user_params
+    @remember = user_params[:remember_me] == "1" # was user_params
     user = User.authenticate(@login, @password)
     user ||= User.authenticate(@login, @password.strip)
 

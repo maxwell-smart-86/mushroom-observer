@@ -8,7 +8,7 @@
 <div class="form-max-width">
   <%= tag.h1 @title.humanize, class: "display-1" %>
 
-  <%= form_with(model: @user, url: account_login_path) do |f| %>
+  <%= form_with(url: account_login_path, scope: :user, local: true) do |f| %>
     <%# f.fields_for :user do |fields| %>
 
     <div class="form-group mt-3">

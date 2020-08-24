@@ -112,15 +112,15 @@ module ControllerExtensions
 
   # Log a user in (affects session only).
   def login(user = "rolf", password = "testpassword")
-    # user = User.authenticate(user, password)
-    # assert(user, "Failed to authenticate user <#{user}> " \
-    #              "with password <#{password}>.")
-    # @request.session[:user_id] = user.id
-    # User.current = user
-
-    post account_login_path(login: user, password: password, remember_me: 1)
+    user = User.authenticate(user, password)
+    assert(user, "Failed to authenticate user <#{user}> " \
+                 "with password <#{password}>.")
+    # new 8/20 AN
+    post account_login_path,
+         params: { user: { login: user, password: password, remember_me: 1 } }
+    @request.session[:user_id] = user.id
+    session[:user_id] = user.id
     User.current = user
-
     # check welcome page! - AN 08/20
   end
 
@@ -134,12 +134,12 @@ module ControllerExtensions
   # Make the logged-in user admin and turn on admin mode.
   def make_admin(user = "rolf", password = "testpassword")
     user = login(user, password)
-    # @request.session[:admin] = true
-    post account_turn_admin_on_path
-    # unless user.admin
-    #   user.admin = 1
-    #   user.save
-    # end
+    post account_turn_admin_on_path # new 8/20 AN
+    @request.session[:admin] = true
+    unless user.admin
+      user.admin = 1
+      user.save
+    end
     user
   end
 

@@ -100,35 +100,66 @@ class SequencesControllerTest < IntegrationControllerTestCase
     assert_select "[data-sequence='#{results[1].id}']"
   end
 
+  def test_login
+    # NOTE: check this method, may need adjusting for new form markup
+    # get account_login_path
+    # puts response.body
+
+    # NOTE: There are double actions in session_extensions!
+    puts "-" * 80
+    puts "Action One"
+    puts "-" * 80
+    get account_login_path
+    puts "-" * 80
+    puts "Check One"
+    puts "-" * 80
+    assert_template 'account/login'
+    puts "-" * 80
+    puts "Action Two"
+    puts "-" * 80
+    post account_login_path, params: { user: { login: "zero", password: "", remember_me: 1 } }
+    puts "-" * 80
+    puts "Check Two"
+    puts "-" * 80
+    assert_template 'account/login'
+    puts "-" * 80
+    puts "Action Three"
+    puts "-" * 80
+    post account_login_path, params: { user: { login: "zero", password: "testpassword", remember_me: 1 } }
+    puts "-" * 80
+    puts "Check Three"
+    puts "-" * 80
+    # byebug
+    follow_redirect! # <-- This resets session to nil. Find out why
+    assert_template 'account/welcome'
+
+  end
+
   def test_new
     obs   = observations(:minimal_unknown_obs)
     owner = obs.user
 
     # Prove method requires login
-    get new_sequence_path(obs: obs.id)
+    # get new_sequence_path(obs: obs.id)
     # assert_redirected_to account_login_path
     # assert_template("account/login")
     # byebug
-    assert_equal "/account/login", path
+    # assert_equal "/account/login", path
 
     # Prove logged-in user can add Sequence to someone else's Observation
-    # NOTE: check this method, may need adjusting for new form markup
-    # get account_login_path
-    # puts response.body
-
     login("zero")
-    # byebug
-    get new_sequence_path(obs: obs.id)
+    get new_sequence_path, params: { obs: obs.id }, headers: { Authorization: ActionController::HttpAuthentication::Basic.encode_credentials("zero", "testpassword") }
+    byebug
     assert_response :success
 
     # Prove Observation owner can add Sequence
     login(owner.login)
-    get new_sequence_path(obs: obs.id)
+    get new_sequence_path, params: { obs: obs.id }
     assert_response :success
 
     # Prove admin can add Sequence
     make_admin("zero")
-    get new_sequence_path(obs: obs.id)
+    get new_sequence_path, params: { obs: obs.id }
     assert_response :success
   end
   # test_new green - AN 08/20

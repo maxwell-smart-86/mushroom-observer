@@ -539,7 +539,12 @@ class ApplicationController < ActionController::Base
 
   # Store User in session (id only).
   def session_user_set(user)
+    puts "-" * 80
+    puts "We are in session_user_set"
+    puts "-" * 80
     session[:user_id] = user ? user.id : nil
+    puts "session[:user_id]:"
+    pp session[:user_id]
     user
   end
 
