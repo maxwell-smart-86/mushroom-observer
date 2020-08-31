@@ -48,7 +48,7 @@
 ################################################################################
 
 class IntegrationControllerTestCase < ActionDispatch::IntegrationTest
-  # include GeneralExtensions
+  include GeneralExtensions
   include SessionExtensions
   include FlashExtensions
   # include IntegrationExtensions # logins, needs session extensions
@@ -58,7 +58,9 @@ class IntegrationControllerTestCase < ActionDispatch::IntegrationTest
   # Important to allow integration tests test the CSRF stuff to avoid unpleasant
   # surprises in production mode.
   def setup
-    ApplicationController.allow_forgery_protection = true
+    # Note: Disabling. This breaks cookies and sessions in integration tests
+    # - AN 8/20
+    # ApplicationController.allow_forgery_protection = true
 
     # This should be automatically removed at the beginning of each test,
     # but for some reason it is not nil before the very first test run.
@@ -75,6 +77,6 @@ class IntegrationControllerTestCase < ActionDispatch::IntegrationTest
   end
 
   def teardown
-    ApplicationController.allow_forgery_protection = false
+    # ApplicationController.allow_forgery_protection = false
   end
 end

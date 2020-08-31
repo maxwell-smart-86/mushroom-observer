@@ -68,7 +68,7 @@ module SessionExtensions
   # tags.  Saves body of all successful responses for debugging, too.
   def process_with_error_checking(method, url, *args)
     puts "-" * 80
-    puts "We are in process_with_error_checking"
+    puts "We are in session_extensions process_with_error_checking"
     puts "-" * 80
     puts "method:"
     pp method

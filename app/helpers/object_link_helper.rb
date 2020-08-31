@@ -254,7 +254,15 @@ module ObjectLinkHelper
   # - can save space: object_path(@project) vs project_path(@project.id)
   # - can accept params: object_path(@project, q: get_query_param)
   def object_path(obj, params = {})
+    # puts "-" * 80
+    # puts "We are in object_link_helper object_path"
+    # puts "-" * 80
+    # pp obj
     objroute = object_route_s(obj)
+    # pp 'objroute'
+    # pp objroute
+    # pp 'params'
+    # pp params
     # params[:id] = obj.id
     add_object_path_params(obj, params)
     send("#{objroute}_path", params)

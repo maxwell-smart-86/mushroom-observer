@@ -30,7 +30,7 @@ class SequencesController < ApplicationController
 
   def index
     puts "-" * 80
-    puts "We are in :index"
+    puts "We are in sequences_controller index"
     puts "-" * 80
     store_location
     if params[:obs]
@@ -49,7 +49,7 @@ class SequencesController < ApplicationController
 
   def show
     puts "-" * 80
-    puts "We are in :show"
+    puts "We are in sequences_controller show"
     puts "-" * 80
 
     pass_query_params
@@ -68,7 +68,7 @@ class SequencesController < ApplicationController
 
   def new
     puts "-" * 80
-    puts "We are in new"
+    puts "We are in sequences_controller new"
     puts "-" * 80
 
     store_location
@@ -84,13 +84,13 @@ class SequencesController < ApplicationController
 
   def create
     puts "-" * 80
-    puts "We are in create"
+    puts "We are in sequences_controller create"
     puts "-" * 80
 
     store_location
     pass_query_params
     @observation = find_or_goto_index(Observation, params[:obs].to_s)
-    byebug
+    # byebug
     return unless @observation
 
     build_sequence
@@ -98,7 +98,7 @@ class SequencesController < ApplicationController
 
   def edit
     puts "-" * 80
-    puts "We are in edit"
+    puts "We are in sequences_controller edit"
     puts "-" * 80
 
     store_location
@@ -117,7 +117,7 @@ class SequencesController < ApplicationController
 
   def update
     puts "-" * 80
-    puts "We are in update"
+    puts "We are in sequences_controller update"
     puts "-" * 80
 
     store_location
@@ -136,7 +136,7 @@ class SequencesController < ApplicationController
 
   def destroy
     puts "-" * 80
-    puts "We are in destroy"
+    puts "We are in sequences_controller destroy"
     puts "-" * 80
 
     pass_query_params
@@ -173,7 +173,7 @@ class SequencesController < ApplicationController
   # Display list of Sequences whose text matches a string pattern.
   def search
     puts "-" * 80
-    puts "We are in search"
+    puts "We are in sequences_controller search"
     puts "-" * 80
 
     pattern = params[:pattern].to_s
@@ -186,7 +186,7 @@ class SequencesController < ApplicationController
       return
     else
       puts "-" * 80
-      puts "I'm sensing a pattern"
+      puts "sequences_controller: I'm sensing a pattern"
       puts "-" * 80
       query = create_query(:Sequence, :pattern_search, pattern: pattern)
       show_selected_sequences(query)
@@ -209,7 +209,9 @@ class SequencesController < ApplicationController
 
   def build_sequence
     puts "-" * 80
-    puts "We are in build_sequence"
+    puts "We are in sequences_controller build_sequence"
+    pp @query_params
+    pp get_query_param
     puts "-" * 80
 
     @sequence = @observation.sequences.new
@@ -217,6 +219,7 @@ class SequencesController < ApplicationController
     @sequence.user = @user
     if @sequence.save
       flash_notice(:runtime_sequence_success.t(id: @sequence.id))
+      # byebug @query_params[:q] because it's passed via pass_query_params
       redirect_to observation_path(@observation.id, q: get_query_param)
     else
       flash_object_errors(@sequence)
@@ -225,12 +228,15 @@ class SequencesController < ApplicationController
 
   def save_updates
     puts "-" * 80
-    puts "We are in save_updates"
+    puts "We are in sequences_controller save_updates"
     puts "-" * 80
 
     @sequence.attributes = whitelisted_sequence_params
     if @sequence.save
       flash_notice(:runtime_sequence_success.t(id: @sequence.id))
+      # byebug
+      # puts "save_updates saved it, here is the redirect path: "
+      # puts helpers.object_path(@back_object, q: get_query_param).to_s
       redirect_to(helpers.object_path(@back_object, q: get_query_param))
     else
       flash_object_errors(@sequence)

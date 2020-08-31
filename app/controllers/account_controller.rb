@@ -209,11 +209,17 @@ class AccountController < ApplicationController
   private
 
   def login_get
+    puts "-" * 80
+    puts "We are in account_controller login_get"
+    puts "-" * 80
     @login = ""
     @remember = true
   end
 
   def login_post
+    puts "-" * 80
+    puts "We are in account_controller login_post"
+    puts "-" * 80
     # New login form params are not nested under user - AN 07/20 ??? Hartl ???
     user_params = params[:user] || {}
     @login    = user_params[:login].to_s # was user_params
@@ -228,6 +234,9 @@ class AccountController < ApplicationController
   end
 
   def login_success(user)
+    puts "-" * 80
+    puts "We are in account_controller login_success"
+    puts "-" * 80
     flash_notice :runtime_login_success.t
     @user = user
     @user.last_login = now = Time.zone.now

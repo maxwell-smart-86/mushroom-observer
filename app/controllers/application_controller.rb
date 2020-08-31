@@ -540,7 +540,7 @@ class ApplicationController < ActionController::Base
   # Store User in session (id only).
   def session_user_set(user)
     puts "-" * 80
-    puts "We are in session_user_set"
+    puts "We are in application_controller session_user_set"
     puts "-" * 80
     session[:user_id] = user ? user.id : nil
     puts "session[:user_id]:"
@@ -1622,49 +1622,49 @@ class ApplicationController < ActionController::Base
   # - code permits different classes of objects, e.g., @back_object
   # - can save space: object_path(@project) vs project_path(@project.id)
   # - can accept params: object_path(@project, q: get_query_param)
-  def object_path(obj, params = {})
-    objroute = object_route_s(obj)
-    if !params[:id].present?
-      params[:id] = obj.id
-    end
-    send("#{objroute}_path", params)
-  end
-
-  def edit_object_path(obj, params = {})
-    objroute = object_route_s(obj)
-    params[:id] = obj.id
-    send("edit_#{objroute}_path", params)
-  end
-
-  def new_object_path(obj, params = {})
-    objroute = object_route_s(obj)
-    params[:id] = obj.id
-    send("new_#{objroute}_path", params)
-  end
-
-  def object_action_path(obj, action, params = {})
-    objroute = object_route_p(obj)
-    params[:id] = obj.id
-    send("#{route}_#{action.to_s}_path", params)
-  end
-
-  def model_index_path(model, params = {})
-    objroute = object_route_p(model)
-    send("#{objroute}_path", params)
-  end
-
-  def model_show_path(model, params = {})
-    objroute = object_route_s(model)
-    send("#{objroute}_path", params)
-  end
-
-  def object_route_s(obj)
-    obj.model_name.singular_route_key
-  end
-
-  def object_route_p(obj)
-    obj.model_name.route_key
-  end
+  # def object_path(obj, params = {})
+  #   objroute = object_route_s(obj)
+  #   if !params[:id].present?
+  #     params[:id] = obj.id
+  #   end
+  #   send("#{objroute}_path", params)
+  # end
+  #
+  # def edit_object_path(obj, params = {})
+  #   objroute = object_route_s(obj)
+  #   params[:id] = obj.id
+  #   send("edit_#{objroute}_path", params)
+  # end
+  #
+  # def new_object_path(obj, params = {})
+  #   objroute = object_route_s(obj)
+  #   params[:id] = obj.id
+  #   send("new_#{objroute}_path", params)
+  # end
+  #
+  # def object_action_path(obj, action, params = {})
+  #   objroute = object_route_p(obj)
+  #   params[:id] = obj.id
+  #   send("#{route}_#{action.to_s}_path", params)
+  # end
+  #
+  # def model_index_path(model, params = {})
+  #   objroute = object_route_p(model)
+  #   send("#{objroute}_path", params)
+  # end
+  #
+  # def model_show_path(model, params = {})
+  #   objroute = object_route_s(model)
+  #   send("#{objroute}_path", params)
+  # end
+  #
+  # def object_route_s(obj)
+  #   obj.model_name.singular_route_key
+  # end
+  #
+  # def object_route_p(obj)
+  #   obj.model_name.route_key
+  # end
 
   private ##########
 

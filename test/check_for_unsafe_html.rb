@@ -6,6 +6,8 @@
 #  This file adds a little bit of code at the end of every get/post request
 #  to ensure that no unsafe HTML has slipped by.
 #
+#  Disabling this because it invalidates fixtures sent in forms - AN 8/20
+#
 ################################################################################
 
 module CheckForUnsafeHtml
