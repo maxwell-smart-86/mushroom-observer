@@ -139,7 +139,7 @@ module ControllerExtensions
     @request.session[:user_id] = user.id
     session[:user_id] = user.id
     User.current = user
-    # check welcome page! - AN 08/20
+    # check welcome page? - AN 08/20
   end
 
   # Log a user out (affects session only).
@@ -153,27 +153,26 @@ module ControllerExtensions
   # Make the logged-in user admin and turn on admin mode.
   def make_admin(user = "rolf", password = "testpassword")
     user = login(user, password)
-    post account_turn_admin_on_path, params: { id: :user_id } # new 8/20 AN
-    @request.session[:admin] = true
     unless user.admin
       user.admin = 1
       user.save
     end
+    # @request.session[:admin] = true
+    post account_turn_admin_on_path, params: { id: :user_id } # new 8/20 AN
     user
   end
 
-  # FIXME: Does not work AN - 8/20
+  # FIXME: Test if works AN - 8/20
   # Send GET request to a page that should require login.
   #
   #   # Make sure only logged-in users get to see this page.
   #   requires_login(edit_observation_path, id: 1)
   #
   def requires_login(page, *args)
-    # either_requires_either(:get, page, nil, *args)
-    assert_equal(account_login_path, path)
+    either_requires_either(:get, page, nil, *args)
   end
 
-  # FIXME: Does not work AN - 8/20
+  # FIXME: Test if works AN - 8/20
   # Send POST request to a page that should require login.
   #
   #   # Make sure only logged-in users get to post this page.
@@ -183,7 +182,7 @@ module ControllerExtensions
     either_requires_either(:post, page, nil, *args)
   end
 
-  # FIXME: Does not work AN - 8/20
+  # FIXME: Test if works AN - 8/20
   # Send GET request to a page that should require a specific user.
   #
   #   # Make sure only reviewers can see this page (non-reviewers get
@@ -194,7 +193,7 @@ module ControllerExtensions
     either_requires_either(:get, *args)
   end
 
-  # FIXME: Does not work AN - 8/20
+  # FIXME: Test if works AN - 8/20
   # Send POST request to a page that should require login.
   #
   #   # Make sure only owner can edit observation (non-owners get

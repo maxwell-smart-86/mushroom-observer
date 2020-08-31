@@ -153,7 +153,7 @@ class SequencesController < ApplicationController
 
     if @back == "index"
       # redirect_with_query(action: :index_sequence)
-      redirect_to sequences_path(@sequence.id, q: get_query_param)
+      redirect_to sequences_path(q: get_query_param)
     else
       redirect_to(helpers.object_path(@back_object, q: get_query_param))
     end

@@ -289,15 +289,15 @@ module ObjectLinkHelper
     send("#{route}_#{action.to_s}_path", params)
   end
 
-  # def model_index_path(model, params = {})
-  #   objroute = object_route_p(model)
-  #   send("#{objroute}_path", params)
-  # end
-  #
-  # def model_show_path(model, params = {})
-  #   objroute = object_route_s(model)
-  #   send("#{objroute}_path", params)
-  # end
+  def model_index_path(model, params = {})
+    objroute = object_route_p(model)
+    send("#{objroute}_path", params)
+  end
+
+  def model_show_path(model, params = {})
+    objroute = object_route_s(model)
+    send("#{objroute}_path", params)
+  end
 
   # Note: could be dicey! Assumes plural controller name and default resources
   def controller_index_path(controller, params)

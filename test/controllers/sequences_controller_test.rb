@@ -441,66 +441,66 @@ class SequencesControllerTest < IntegrationControllerTestCase
     assert(obs.rss_log.notes.include?("log_sequence_accessioned"),
            "Failed to include Sequence accessioned in RssLog for Observation")
 
-    # # Prove Observation owner user can edit locus
-    # locus  = "ITS"
-    # params = {
-    #   id: sequence.id,
-    #   sequence: { locus: locus,
-    #               bases: bases,
-    #               archive: archive,
-    #               accession: accession }
-    # }
-    # patch sequence_path(params)
-    # assert_equal(locus, sequence.reload.locus)
-    #
-    # # Prove locus required.
-    # params = {
-    #   id: sequence.id,
-    #   sequence: { locus: "",
-    #               bases: bases,
-    #               archive: archive,
-    #               accession: accession }
-    # }
-    # patch sequence_path(params)
-    # # response is 200 because it just reloads the form
-    # assert_response(:success)
-    # assert_flash_error
-    #
-    # # Prove bases or archive+accession required.
-    # params = {
-    #   id: sequence.id,
-    #   sequence: { locus: locus,
-    #               bases: "",
-    #               archive: "",
-    #               accession: "" }
-    # }
-    # patch sequence_path(params)
-    # assert_response(:success)
-    # assert_flash_error
-    #
-    # # Prove accession required if archive present.
-    # params = {
-    #   id: sequence.id,
-    #   sequence: { locus: locus,
-    #               bases: bases,
-    #               archive: archive,
-    #               accession: "" }
-    # }
-    # patch sequence_path(params)
-    # assert_response(:success)
-    # assert_flash_error
-    #
-    # # Prove archive required if accession present.
-    # params = {
-    #   id: sequence.id,
-    #   sequence: { locus: locus,
-    #               bases: bases,
-    #               archive: "",
-    #               accession: accession }
-    # }
-    # patch sequence_path(params)
-    # assert_response(:success)
-    # assert_flash_error
+    # Prove Observation owner user can edit locus
+    locus  = "ITS"
+    params = {
+      id: sequence.id,
+      sequence: { locus: locus,
+                  bases: bases,
+                  archive: archive,
+                  accession: accession }
+    }
+    patch sequence_path(params)
+    assert_equal(locus, sequence.reload.locus)
+
+    # Prove locus required.
+    params = {
+      id: sequence.id,
+      sequence: { locus: "",
+                  bases: bases,
+                  archive: archive,
+                  accession: accession }
+    }
+    patch sequence_path(params)
+    # response is 200 because it just reloads the form
+    assert_response(:success)
+    assert_flash_error
+
+    # Prove bases or archive+accession required.
+    params = {
+      id: sequence.id,
+      sequence: { locus: locus,
+                  bases: "",
+                  archive: "",
+                  accession: "" }
+    }
+    patch sequence_path(params)
+    assert_response(:success)
+    assert_flash_error
+
+    # Prove accession required if archive present.
+    params = {
+      id: sequence.id,
+      sequence: { locus: locus,
+                  bases: bases,
+                  archive: archive,
+                  accession: "" }
+    }
+    patch sequence_path(params)
+    assert_response(:success)
+    assert_flash_error
+
+    # Prove archive required if accession present.
+    params = {
+      id: sequence.id,
+      sequence: { locus: locus,
+                  bases: bases,
+                  archive: "",
+                  accession: accession }
+    }
+    patch sequence_path(params)
+    assert_response(:success)
+    assert_flash_error
   end
 
   def test_change_redirect
@@ -525,21 +525,21 @@ class SequencesControllerTest < IntegrationControllerTestCase
 
     # Prove by default :update goes back to observation.
     patch sequence_path(params)
-    # assert_redirected_to(observation_path(obs))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs))
+    # puts response.body
+    # assert_template("observations/show")
 
     # Prove that :update keeps query param when returning to observation.
     patch sequence_path(params.merge(q: q))
-    # assert_redirected_to(observation_path(obs, q: q))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs, q: q))
+    # puts response.body
+    # assert_template("observations/show")
 
     # Prove that :update can return to show, too, with query intact.
     patch sequence_path(params.merge(back: "show", q: q))
-    # assert_redirected_to(sequence_path(sequence, q: q))
-    puts response.body
-    assert_template("sequences/show")
+    assert_redirected_to(sequence_path(sequence, q: q))
+    # puts response.body
+    # assert_template("sequences/show")
   end
 
   def test_destroy
@@ -556,18 +556,18 @@ class SequencesControllerTest < IntegrationControllerTestCase
     login("zero")
     delete sequence_path(id: sequence.id)
     assert_equal(old_count, Sequence.count)
-    # assert_redirected_to(observation_path(obs))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs))
+    # puts response.body
+    # assert_template("observations/show")
     assert_flash_text(:permission_denied.t)
 
     # Prove Observation owner can destroy Sequence
     login(observer.login)
     delete sequence_path(id: sequence.id)
     assert_equal(old_count - 1, Sequence.count)
-    # assert_redirected_to(observation_path(obs))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs))
+    # puts response.body
+    # assert_template("observations/show")
     assert_flash_success
     assert(obs.rss_log.notes.include?("log_sequence_destroy"),
            "Failed to include Sequence destroyed in RssLog for Observation")
@@ -583,9 +583,9 @@ class SequencesControllerTest < IntegrationControllerTestCase
     make_admin("zero")
     delete sequence_path(id: sequence.id)
     assert_equal(old_count - 1, Sequence.count)
-    # assert_redirected_to(observation_path(obs))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs))
+    # puts response.body
+    # assert_template("observations/show")
     assert_flash_success
     assert(obs.rss_log.notes.include?("log_sequence_destroy"),
            "Failed to include Sequence destroyed in RssLog for Observation")
@@ -600,19 +600,19 @@ class SequencesControllerTest < IntegrationControllerTestCase
 
     # Prove by default it goes back to observation.
     delete sequence_path(id: seqs[0].id)
-    # assert_redirected_to(observation_path(obs))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs))
+    # puts response.body
+    # assert_template("observations/show")
 
     # Prove that it keeps query param intact when returning to observation.
     delete sequence_path(id: seqs[1].id, q: q)
-    # assert_redirected_to(observation_path(obs, q: q))
-    puts response.body
-    assert_template("observations/show")
+    assert_redirected_to(observation_path(obs, q: q))
+    # puts response.body
+    # assert_template("observations/show")
 
     # Prove that it can return to index, too, with query intact.
     delete sequence_path(id: seqs[2].id, q: q, back: "index")
-    # assert_redirected_to sequences_index_sequence_path(q: q)
-    assert_template("sequences/index")
+    assert_redirected_to sequences_path(q: q)
+    # assert_template("sequences/index")
   end
 end

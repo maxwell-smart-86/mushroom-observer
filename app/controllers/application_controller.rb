@@ -98,6 +98,7 @@ class ApplicationController < ActionController::Base
   require "login_system"
   require "csv"
   include LoginSystem
+  include ObjectLinkHelper
   # include ViewsPath - Nimmo experiment, please keep for now
 
   # Prevent CSRF attacks by raising an exception.
@@ -1618,7 +1619,7 @@ class ApplicationController < ActionController::Base
     result
   end
 
-  # Output path helpers. Useful when:
+  # Output path helpers. Defined in object_link_helper.rb, these are not current
   # - code permits different classes of objects, e.g., @back_object
   # - can save space: object_path(@project) vs project_path(@project.id)
   # - can accept params: object_path(@project, q: get_query_param)
