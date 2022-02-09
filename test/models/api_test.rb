@@ -2169,8 +2169,8 @@ class ApiTest < UnitTestCase
     assert_api_pass(params.merge(has_images: "no"))
     assert_api_results(without)
 
-    with    = Observation.where.not(location: nil)
-    without = Observation.where(location: nil)
+    with    = Observation.where.not("`lat` is null or `long` is null")
+    without = Observation.where("`lat` is null or `long` is null")
     assert(with.length > 1)
     assert(without.length > 1)
     assert_api_pass(params.merge(has_location: "yes"))

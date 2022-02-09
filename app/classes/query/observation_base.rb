@@ -129,8 +129,8 @@ module Query
 
     def initialize_has_location_parameter
       add_boolean_condition(
-        "observations.location_id IS NOT NULL",
-        "observations.location_id IS NULL",
+        "observations.lat IS NOT NULL AND observations.long IS NOT NULL",
+        "observations.lat IS NULL OR observations.long IS NULL",
         params[:has_location]
       )
     end
